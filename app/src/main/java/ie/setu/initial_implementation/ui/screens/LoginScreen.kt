@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +24,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ie.setu.initial_implementation.ui.components.AccessibleTextField
+import ie.setu.initial_implementation.ui.components.LargeAccessibleButton
 import ie.setu.initial_implementation.ui.theme.InitialImplementationTheme
 
 @Composable
@@ -67,54 +67,41 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // Email field
-            OutlinedTextField(
+            AccessibleTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
-                singleLine = true,
+                label = "Email",
+                placeholder = "Enter your email",
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                textStyle = MaterialTheme.typography.bodyLarge
+                modifier = Modifier.padding(vertical = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Password field
-            OutlinedTextField(
+            AccessibleTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
-                singleLine = true,
+                label = "Password",
+                placeholder = "Enter your password",
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                textStyle = MaterialTheme.typography.bodyLarge
+                modifier = Modifier.padding(vertical = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // Login button
-            Button(
-                onClick = onLoginClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-            ) {
-                Text(
-                    text = "Login / Register",
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
+            LargeAccessibleButton(
+                text = "Login / Register",
+                onClick = onLoginClick
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
