@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import ie.setu.initial_implementation.ui.screens.LoginScreen
+import androidx.navigation.compose.rememberNavController
+import ie.setu.initial_implementation.ui.navigation.AppNavigation
 import ie.setu.initial_implementation.ui.theme.InitialImplementationTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,12 +22,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Display login screen
-                    LoginScreen(
-                        onLoginClick = {
-                            // Navigation to be implemented
-                        }
-                    )
+                    val navController = rememberNavController()
+                    AppNavigation(navController = navController)
                 }
             }
         }
