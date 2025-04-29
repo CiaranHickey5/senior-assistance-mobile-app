@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "885216302770",
+    "project_id": "daily-haven",
+    "storage_bucket": "daily-haven.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885216302770:android:e7b96b545edc2f95c01bab",
+        "android_client_info": {
+          "package_name": "ie.setu.initial_implementation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgwHpdsM0NMN64zdQxR7V2Vsw-uVeq0is"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
