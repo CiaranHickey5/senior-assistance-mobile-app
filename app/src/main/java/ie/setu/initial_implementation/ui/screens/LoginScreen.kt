@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ie.setu.initial_implementation.data.service.AuthService
 import ie.setu.initial_implementation.ui.components.AccessibleTextField
 import ie.setu.initial_implementation.ui.components.LargeAccessibleButton
 import ie.setu.initial_implementation.ui.theme.InitialImplementationTheme
@@ -34,6 +38,18 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    val authService = remember { AuthService() }
+
+    // Check if user is already signed in
+    LaunchedEffect(Unit) {
+        if (authService.isUserSignedIn()) {
+            onLoginClick()
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -97,11 +113,47 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Login button
-            LargeAccessibleButton(
-                text = "Login / Register",
-                onClick = onLoginClick
-            )
+            // Login/Register button or loading indicator
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(16.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                LargeAccessibleButton(
+                    text = "Login / Register",
+                    onClick = {
+                        if (email.isNotBlank() && password.isNotBlank() && password.length >= 6) {
+                            isLoading = true
+
+                            // For the initial implementation, you can use this
+                            // simplified approach that just navigates
+                            // onLoginClick()
+
+                            // Or, if you want to use real Firebase Auth:
+                            authService.login(
+                                email = email,
+                                password = password,
+                                onSuccess = {
+                                    isLoading = false
+                                    onLoginClick()
+                                },
+                                onFailure = { error ->
+                                    isLoading = false
+                                    errorMessage = error
+                                    showError = true
+                                }
+                            )
+                        } else if (password.length < 6 && password.isNotBlank()) {
+                            errorMessage = "Password must be at least 6 characters"
+                            showError = true
+                        } else {
+                            errorMessage = "Please enter both email and password"
+                            showError = true
+                        }
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -112,6 +164,24 @@ fun LoginScreen(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(8.dp)
             )
+
+            // Error message
+            if (showError) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Snackbar(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text(text = errorMessage)
+                }
+
+                // Auto-hide error after 3 seconds
+                LaunchedEffect(showError) {
+                    if (showError) {
+                        kotlinx.coroutines.delay(3000)
+                        showError = false
+                    }
+                }
+            }
         }
     }
 }
