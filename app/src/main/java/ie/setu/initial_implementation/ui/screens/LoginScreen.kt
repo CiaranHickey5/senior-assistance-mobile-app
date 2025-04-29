@@ -48,7 +48,7 @@ fun LoginScreen(
         ) {
             // Title
             Text(
-                text = "Senior Assistance",
+                text = "Daily Haven",
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
