@@ -21,16 +21,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ie.setu.initial_implementation.DailyHavenApplication
+import ie.setu.initial_implementation.data.repository.UserRepository
 import ie.setu.initial_implementation.data.service.AuthService
 import ie.setu.initial_implementation.ui.components.AccessibleTextField
 import ie.setu.initial_implementation.ui.components.LargeAccessibleButton
-import ie.setu.initial_implementation.ui.theme.InitialImplementationTheme
 
 @Composable
 fun LoginScreen(
@@ -42,7 +43,12 @@ fun LoginScreen(
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    val authService = remember { AuthService() }
+    // Get dependencies from the application
+    val context = LocalContext.current
+    val application = context.applicationContext as DailyHavenApplication
+    val userDao = application.database.userDao()
+    val userRepository = remember { UserRepository(userDao) }
+    val authService = remember { AuthService(userRepository) }
 
     // Check if user is already signed in
     LaunchedEffect(Unit) {
@@ -126,11 +132,6 @@ fun LoginScreen(
                         if (email.isNotBlank() && password.isNotBlank() && password.length >= 6) {
                             isLoading = true
 
-                            // For the initial implementation, you can use this
-                            // simplified approach that just navigates
-                            // onLoginClick()
-
-                            // Or, if you want to use real Firebase Auth:
                             authService.login(
                                 email = email,
                                 password = password,
@@ -183,13 +184,5 @@ fun LoginScreen(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    InitialImplementationTheme {
-        LoginScreen()
     }
 }

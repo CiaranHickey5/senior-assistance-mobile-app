@@ -1,9 +1,17 @@
 package ie.setu.initial_implementation.data.service
 
 import com.google.firebase.auth.FirebaseAuth
+import ie.setu.initial_implementation.data.repository.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class AuthService {
+/**
+ * Service class to handle authentication with Firebase
+ */
+class AuthService(private val userRepository: UserRepository) {
     private val auth = FirebaseAuth.getInstance()
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     /**
      * Login function takes email and password and attempts to sign in with Firebase Auth
@@ -12,7 +20,16 @@ class AuthService {
         // First try to sign in
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                onSuccess()
+                // User successfully logged in, ensure they exist in local database
+                val userId = auth.currentUser?.uid
+                if (userId != null) {
+                    coroutineScope.launch {
+                        userRepository.createUser(userId, email)
+                        onSuccess()
+                    }
+                } else {
+                    onSuccess()
+                }
             }
             .addOnFailureListener {
                 // If login fails, try to create the account
@@ -26,7 +43,16 @@ class AuthService {
     private fun register(email: String, password: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                onSuccess()
+                // User successfully registered, save to local database
+                val userId = auth.currentUser?.uid
+                if (userId != null) {
+                    coroutineScope.launch {
+                        userRepository.createUser(userId, email)
+                        onSuccess()
+                    }
+                } else {
+                    onSuccess()
+                }
             }
             .addOnFailureListener { exception ->
                 onFailure(exception.message ?: "Failed to authenticate")
