@@ -35,6 +35,7 @@ fun AppNavigation(
         }
 
         composable(Routes.HOME) {
+            val email = navController.previousBackStackEntry?.arguments?.getString("email") ?: ""
             HomeScreen(
                 onMedicationClick = { /* To be implemented */ },
                 onActivityClick = { /* To be implemented */ },

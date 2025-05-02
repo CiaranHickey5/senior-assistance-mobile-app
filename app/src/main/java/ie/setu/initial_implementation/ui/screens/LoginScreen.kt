@@ -1,5 +1,6 @@
 package ie.setu.initial_implementation.ui.screens
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +36,7 @@ import ie.setu.initial_implementation.ui.components.LargeAccessibleButton
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit = {}
+    onLoginClick: (String) -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -53,7 +54,7 @@ fun LoginScreen(
     // Check if user is already signed in
     LaunchedEffect(Unit) {
         if (authService.isUserSignedIn()) {
-            onLoginClick()
+            onLoginClick(email)
         }
     }
 
@@ -131,13 +132,12 @@ fun LoginScreen(
                     onClick = {
                         if (email.isNotBlank() && password.isNotBlank() && password.length >= 6) {
                             isLoading = true
-
                             authService.login(
                                 email = email,
                                 password = password,
                                 onSuccess = {
                                     isLoading = false
-                                    onLoginClick()
+                                    onLoginClick(email) // Pass the email here
                                 },
                                 onFailure = { error ->
                                     isLoading = false

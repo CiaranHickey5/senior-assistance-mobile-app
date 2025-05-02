@@ -47,6 +47,7 @@ import ie.setu.initial_implementation.ui.theme.InitialImplementationTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    email: String = "User",
     onMedicationClick: () -> Unit = {},
     onActivityClick: () -> Unit = {},
     onEmergencyClick: () -> Unit = {},
@@ -87,7 +88,7 @@ fun HomeScreen(
                             shape = CircleShape
                         ) {
                             Text(
-                                text = "JD", // User's initials
+                                text = email.firstOrNull()?.uppercase() ?: "U",
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center,
@@ -138,6 +139,12 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
+            Text(
+                text = "Welcome, $email",
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
             // Main feature buttons
             Card(
                 modifier = Modifier
@@ -152,7 +159,6 @@ fun HomeScreen(
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-
                     LargeAccessibleButton(
                         text = "Medication Reminders",
                         onClick = onMedicationClick,
