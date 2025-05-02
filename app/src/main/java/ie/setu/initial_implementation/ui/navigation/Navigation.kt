@@ -2,9 +2,11 @@ package ie.setu.initial_implementation.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import ie.setu.initial_implementation.ui.screens.HomeScreen
 import ie.setu.initial_implementation.ui.screens.LoginScreen
 
@@ -25,18 +27,22 @@ fun AppNavigation(
     ) {
         composable(Routes.LOGIN) {
             LoginScreen(
-                onLoginClick = {
-                    navController.navigate(Routes.HOME) {
-                        // Clear back stack so user can't go back to login after authenticated
+                onLoginClick = { email ->
+                    navController.navigate("${Routes.HOME}/$email") {
                         popUpTo(Routes.LOGIN) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable(Routes.HOME) {
-            val email = navController.previousBackStackEntry?.arguments?.getString("email") ?: ""
+        composable(
+            "${Routes.HOME}/{email}",
+            arguments = listOf(navArgument("email") { type = NavType.StringType })
+        ) { backStackEntry ->
+            // Extract email from navigation arguments
+            val email = backStackEntry.arguments?.getString("email") ?: "User"
             HomeScreen(
+                email = email,
                 onMedicationClick = { /* To be implemented */ },
                 onActivityClick = { /* To be implemented */ },
                 onEmergencyClick = { /* To be implemented */ },
