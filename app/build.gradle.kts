@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.gms.google.services)
     id("kotlin-kapt")
 }
 
@@ -53,10 +52,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.navigation.compose)
-
-    // Firebase dependencies
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
 
     // Room database dependencies
     implementation("androidx.room:room-runtime:2.6.1")

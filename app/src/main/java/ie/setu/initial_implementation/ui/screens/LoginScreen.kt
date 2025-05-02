@@ -48,7 +48,7 @@ fun LoginScreen(
     val application = context.applicationContext as DailyHavenApplication
     val userDao = application.database.userDao()
     val userRepository = remember { UserRepository(userDao) }
-    val authService = remember { AuthService(userRepository) }
+    val authService = remember { AuthService() }
 
     // Check if user is already signed in
     LaunchedEffect(Unit) {
